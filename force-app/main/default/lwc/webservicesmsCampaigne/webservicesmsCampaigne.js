@@ -114,7 +114,6 @@ export default class webservicesmsCampaigne extends LightningElement {
             }
         })
         .catch(error => {
-            // Gérer les erreurs si nécessaire
         });
         this.accountOptions = this.records.map(record => {
             // Vérifie si les données existent dans l'enregistrement
@@ -140,17 +139,6 @@ export default class webservicesmsCampaigne extends LightningElement {
             this.showIcon = false;
         }
     }
-    /*@wire(getAccountNames)
-    wiredAccounts({ error, data }) {
-        if (data) {
-            this.accountOptions = data.map(account => {
-                return { label: account.Name, value: account.Id, phone: account.Phone };
-            });
-        } else if (error) {
-            console.error('Error loading accounts', error);
-        }
-    }*/
-
     @wire(getMessagesByOwner)
     wiredMessages({ error, data }) {
         if (data) {
@@ -225,7 +213,7 @@ export default class webservicesmsCampaigne extends LightningElement {
         }
     }
     handleToNumberChange(event) {
-        const cursorPosition = event.target.selectionStart; // Obtient la position du curseur dans le champ de texte
+        const cursorPosition = event.target.selectionStart; 
         let toNumbers = event.target.value;
     
         // Vérifie si une virgule vient d'être ajoutée à la position du curseur
