@@ -1,0 +1,297 @@
+<template>
+    <lightning-spinner if:true={isLoading1} alternative-text="Loading"></lightning-spinner>
+    <template if:true={isLoginModalOpen}>
+    <div style="width: 100vw; height: 100vh;padding: 10px; margin: 0 auto; background-color:#efecec;">
+        <!-- Modal de connexion -->
+            <div style="text-align: center;">
+                <img src={logo} alt="Login Logo" style="max-width: 443px;">
+            </div>
+            <div style="text-align: center; margin-bottom: 20px; color: black;">
+                Identifiez-vous pour accéder à votre compte
+            </div>
+            <!-- Outer Section with Black Border and White Box-Shadow -->
+            <section style="max-width: 16rem; margin: auto; padding: 0; border-radius: 10px; background-color: black; box-shadow: 0 0 0 8px white, 0 0 20px black;">
+                <!-- Inner Content with Black Background and Padding to Create Space -->
+                <div style="padding: 20px; margin: 10px; background-color: black; border-radius: 6px;">
+                    <div style="margin-top: 20px; text-align: center;">
+                        <div style="margin-bottom: 10px;">
+                            <label for="username" style="color: white; display: block;">Login Utilisateur
+                            </label>
+                            <input id="username" type="text" value={username} onchange={handleUsernameChange} required style="width: 80%; margin: auto; display: block;">
+                        </div>
+                        <div style="margin-bottom: 20px;">
+                            <label for="password" style="color: white; display: block;">Mot de passe</label>
+                            <input id="password" type="password" value={password} onchange={handlePasswordChange} required style="width: 80%; margin: auto; display: block;">
+                        </div>
+                    </div>
+    
+                    <!-- Submit Button -->
+                    <div style="text-align: center; display: flex; justify-content: center; margin-top: 20px; margin-bottom: 20px;">
+                        <button onclick={login} title="Valider" style="color: black; display: flex; align-items: center; margin: auto; font-size: 0.9em; padding: 5px 10px;">
+                            <img src={IconArrow} alt="Valider" style="width: 1.0em; height: 1.0em; margin-right: 5px;">
+                            Valider
+                        </button>
+                    </div>
+                    <template if:true={error}>
+                        <div style="text-align: center; display: flex; justify-content: center; margin-top: 20px; margin-bottom: 20px;">
+                            <span style="color: red;">Login ou mot de passe invalide</span>
+                        </div>
+                    </template>
+                </div>
+            </section>
+       
+    </div>
+</template>
+      
+              
+        <template if:false={isLoginModalOpen}>
+            <div style="max-width: 650px;padding: 10px; margin: 0 auto;">
+                <lightning-spinner if:true={isLoading2} alternative-text="Loading"></lightning-spinner>
+                <lightning-card title="Envoyer un SMS" icon-name="standard:action_list_component">
+                    <div slot="actions" style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+                        <span style="color: Black;margin-right: 10vw;">Crédit: {xSmsCredit} SMS</span>
+                        <lightning-button label="Déconnexion" onclick={logOut}></lightning-button>
+                    </div>
+                    <div class="slds-p-around_x-small">
+                         <!-- Code HTML ajouté -->
+            <button type="button" class="collapsible" onclick={toggleContent} data-section-id="destinataires">NOM DE LA CAMPAGNE&nbsp;<template if:true={showIcon}>✅</template>
+            </button>
+            <div class="content">
+                <lightning-tabset variant="scoped">
+                    <lightning-tab label="Numéros Libre">
+                        <div class="slds-col slds-size_1-of-3">
+                            <div class="slds-m-bottom_medium">
+                                <lightning-input label="NOM DE LA CAMPAGNE" type="text" onchange={handletonomdelaCampagne} maxlength="80" data-id="nomdelaCampagne"></lightning-input>
+                            </div>
+                            </div>
+                       
+                    </lightning-tab>
+
+                </lightning-tabset>
+                <div class="slds-text-align_left" style="margin-top: 20px; margin-bottom: 20px;">
+                    <template if:true={nextStepButtonMessage}>
+                        <button onclick={nextstepMessage} style=" color: rgba(0, 0, 0, 0.5);display: flex; align-items: center;font-size: 0.9em; padding: 5px 10px;"  disabled>
+                            <img src={IconArrow} alt="Valider" style="width: 1.0em; height: 1.0em; margin-right: 5px;">
+                            Étape suivante
+                        </button>
+                    </template>
+                    <template if:false={nextStepButtonMessage}>
+                        <button onclick={nextstepMessage} style=" color: black;display: flex; align-items: center;font-size: 0.9em; padding: 5px 10px;">
+                            <img src={IconArrow} alt="Valider" style="width: 1.0em; height: 1.0em; margin-right: 5px;">
+                            Étape suivante
+                        </button>
+                    </template>
+                </div>
+            </div>
+            <button type="button" class="collapsible" onclick={toggleContent} data-section-id="message">MESSAGE&nbsp;<template if:false={nextStepButtonEnvoi}>
+                ✅
+                </template>
+            </button>
+            <div class="content">
+                <lightning-tabset variant="scoped" active-tab-value={activeTabValue}>
+                    <lightning-tab label="Message Libre" data-id="messageLibreTab" value="messageLibre">
+                        <div class="slds-m-bottom_medium">
+                            <label for="textarea">Message</label>
+                            <textarea class="custom-textarea" data-id="messageInput" label="Message" style="height: 95px;width: 100%;" oninput={handleMessageChange} maxlength="612" required></textarea>
+                            <div style="color: black;"><span><strong>{messageLength}</strong> Caractères | <strong>{remainingCharacters}</strong> caractères restants</span><br>
+                                <span>Votre message en <strong>{numMessages}</strong> SMS</span></div>
+                        </div>
+                    </lightning-tab>
+                    <lightning-tab label="Message(s) prédéfini(s)" data-id="predefinedMessagesTab" value="predefinedMessages" onclick={handlePredefinedTabClick}>
+                        <div class="slds-grid slds-gutters">
+                            <div class="slds-col slds-size_1-of-3">
+                                <div class="slds-m-bottom_medium">
+                                    <label for="cars">Liste de message prédéfini</label>
+                                    <select class="message-list" size="5" style="width: 100%;" onchange={selectMessage}>
+                                        <template for:each={messages} for:item="message">
+                                            <option key={message.key} value={message.value}>{message.label}</option>
+                                        </template>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="slds-col slds-size_2-of-3">
+                                <div class="slds-m-bottom_medium">
+                                    <label for="textarea">Détail du message</label>
+                                    <textarea style="height: 95px;width: 100%;" maxlength="612" disabled>{selectedMessageValue}</textarea>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="slds-grid slds-gutters">
+                            <div class="slds-m-bottom_medium slds-m-left_small">
+                                <button class="slds-button slds-button_destructive" onclick={deletePredefinedMessage}>Supprimer</button>
+                            </div>
+                            <div class="slds-m-bottom_medium slds-m-left_x-small">
+                                <button class="slds-button slds-button_brand" onclick={addPredefinedMessage}>Ajouter</button>
+                            </div>
+                        </div>
+                    </lightning-tab>
+                    <div class="slds-text-align_left" style="margin-top: 20px; margin-bottom: 20px;">
+                        <template if:true={nextStepButtonEnvoi}>
+                            <button onclick={nextstepEnvoi} style=" color: rgba(0, 0, 0, 0.5);display: flex; align-items: center;font-size: 0.9em; padding: 5px 10px;"  disabled>
+                                <img src={IconArrow} alt="Valider" style="width: 1.0em; height: 1.0em; margin-right: 5px;">
+                                Étape suivante
+                            </button>
+                        </template>
+                        <template if:false={nextStepButtonEnvoi}>
+                            <button onclick={nextstepEnvoi} style=" color: black;display: flex; align-items: center;font-size: 0.9em; padding: 5px 10px;">
+                                <img src={IconArrow} alt="Valider" style="width: 1.0em; height: 1.0em; margin-right: 5px;">
+                                Étape suivante
+                            </button>
+                        </template>
+                    </div>
+                </lightning-tabset>
+               
+               
+                   </div>
+            <button type="button" class="collapsible" onclick={toggleContent} data-section-id="envoi">ENVOI</button>
+            <div class="content">
+                <lightning-tabset variant="scoped">
+                    <lightning-tab label="Immédiat" data-id="Immédiat" value="Immédiat">
+                        <div class="slds-m-bottom_medium">
+                                
+                            <label for="textarea">Numéros de téléphone avec code pays (séparés par des virgules)</label>
+                    <div class="slds-col slds-size_1-of-3">
+                            <textarea label="Numéros de téléphone avec code pays (séparés par des virgules)" style="height: 95px;width: 100%;" oninput={handleToNumberChange} data-id="toNumbers"></textarea>
+            
+                        </div>
+                    </div>
+                        <span style="margin-top: 20px; margin-bottom: 20px;">Envoi Immédiat de(s) SMS après Validation</span>
+                    </lightning-tab>
+                    <lightning-tab label="Différé" data-id="Différé" value="Différé">
+                            <div class="slds-m-bottom_medium">
+                                <label for="dateInput">date d'envoi :</label>
+                                <div class="slds-col slds-size_1-of-3">
+                                    <input type="date" id="dateInput" name="dateInput" value={dateValue} onchange={handleDateChange}>
+                                </div>
+                            </div>
+                            <div class="slds-m-bottom_medium">
+                                    <label for="timeInput">heure d'envoi :</label>
+                                    <div class="slds-col slds-size_1-of-3">
+                                        <input type="time" id="timeInput" name="timeInput" value={timeValue} onchange={handleTimeChange}>
+                                    </div>
+                            </div>    
+                            <div class="slds-m-bottom_medium">
+                                    <label for="textarea">Numéros de téléphone avec code pays (séparés par des virgules)</label>
+                                    <div class="slds-col slds-size_1-of-3">
+                                        <textarea label="Numéros de téléphone avec code pays (séparés par des virgules)" style="height: 95px;width: 100%;" oninput={handleToNumberChange} data-id="toNumbers"></textarea>
+                                    </div>
+                            </div>
+                         
+                    </lightning-tab>
+                </lightning-tabset>
+                <div class="slds-text-align_left" style="margin-top: 20px; margin-bottom: 20px;">
+                    <button onclick={sendMessage}  style="color: black; display: flex; align-items: center;font-size: 0.9em; padding: 5px 10px;">
+                        <img src={IconArrow} alt="Valider" style="width: 1.0em; height: 1.0em; margin-right: 5px;">
+                        Envoyer
+                    </button>
+                    
+                </div>   
+                
+            </div>           
+                    </div>
+                </lightning-card>
+            </div>
+           
+        </template>
+        <template if:true={errorCampagne}>
+            <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+                <div class="slds-modal__container">
+                    <div class="slds-modal__content slds-p-around_medium">
+                        <div style="text-align: center; display: flex; justify-content: center; margin-top: 20px; margin-bottom: 20px;">
+                            <span style="color: red;">Vous devez obligatoirement saisir un Nom de la Campagne
+                                </span>
+                        </div>
+                    </div>
+                    
+                    <footer class="slds-modal__footer">
+                            <button class="slds-button slds-button_success" onclick={errorCampagneOk} title="OK">OK</button>
+                    </footer>
+                </div>
+            </section>
+            <div class="slds-backdrop slds-backdrop_open"></div>
+        </template>
+        <template if:true={errornumberVide}>
+            <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+                <div class="slds-modal__container">
+                    <div class="slds-modal__content slds-p-around_medium">
+                        <div style="text-align: center; display: flex; justify-content: center; margin-top: 20px; margin-bottom: 20px;">
+                            <span style="color: red;">Vous devez obligatoirement saisir un ou des numéros de destinataire(s)
+                                </span>
+                        </div>
+                    </div>
+                    
+                    <footer class="slds-modal__footer">
+                            <button class="slds-button slds-button_success" onclick={errornumbervideOk} title="OK">OK</button>
+                    </footer>
+                </div>
+            </section>
+            <div class="slds-backdrop slds-backdrop_open"></div>
+        </template>
+        <template if:true={errorMessage}>
+            <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+                <div class="slds-modal__container">
+                    <div class="slds-modal__content slds-p-around_medium">
+                        <div style="text-align: center; display: flex; justify-content: center; margin-top: 20px; margin-bottom: 20px;">
+                            <span style="color: red;">Vous devez obligatoirement saisir un message libre
+                                ou choisir un message prédéfini.</span>
+                        </div>
+                    </div>
+                    
+                    <footer class="slds-modal__footer">
+                            <button class="slds-button slds-button_success" onclick={errormessageOk} title="OK">OK</button>
+                    </footer>
+                </div>
+            </section>
+            <div class="slds-backdrop slds-backdrop_open"></div>
+        </template>
+        <template if:true={inputValid}>
+            <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+                <div class="slds-modal__container">
+                    <div class="slds-modal__content slds-p-around_medium">
+                        <div style="text-align: center; display: flex; justify-content: center; margin-top: 20px; margin-bottom: 20px;">
+                            <span style="color: red;">Veuillez entrer un numéro avec code pays exemple(+233*******)</span>
+                        </div>
+                    </div>
+                    
+                    <footer class="slds-modal__footer">
+                            <button class="slds-button slds-button_success" onclick={inputValidOk} title="OK">OK</button>
+                    </footer>
+                </div>
+            </section>
+            <div class="slds-backdrop slds-backdrop_open"></div>
+        </template>
+
+
+    <!-- Modal -->
+    <template if:true={isModalOpen}>
+        <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+            <div class="slds-modal__container">
+                <header class="slds-modal__header">
+                    <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">Voulez vous Enregistrer le message comme message prédéfini?</h2>
+                </header>
+                <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+                    <template if:true={isSaveMessage}> 
+                        <lightning-input label="Titre du message prédéfini" value={predefinedMessageTitle} onchange={handleTitleChange} required="true"></lightning-input>
+                    </template>
+                </div>
+                
+                <footer class="slds-modal__footer">
+                    <template if:false={choicefinish}>
+                        <div style="display: flex; justify-content: space-between;">
+                            <button class="slds-button slds-button_neutral" onclick={closeModal} title="Cancel">Annuler</button>
+                            <div>
+                                <button class="slds-button slds-button_destructive" onclick={unconfirmeSave} title="Non">Non</button>
+                                <button class="slds-button slds-button_success" onclick={confirmSave} title="Oui">Oui</button>
+                            </div>
+                        </div>
+                    </template>
+                    <template if:true={choicefinish}>
+                        <button class="slds-button slds-button_neutral" onclick={closeModal} title="Cancel">Annuler</button>
+                        <button class="slds-button slds-button_success" onclick={confirmSend} title="OK">Confirmer</button>
+                    </template>
+                    </footer>
+            </div>
+        </section>
+        <div class="slds-backdrop slds-backdrop_open"></div>
+    </template>
+</template>

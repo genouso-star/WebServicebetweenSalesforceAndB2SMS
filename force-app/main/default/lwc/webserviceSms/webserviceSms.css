@@ -1,0 +1,95 @@
+.alert {
+  padding: 20px;
+  background-color: #f44336;
+  color: white;
+}
+
+.closebtn {
+  margin-left: 15px;
+  color: white;
+  font-weight: bold;
+  float: right;
+  font-size: 22px;
+  line-height: 20px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.closebtn:hover {
+  color: black;
+}
+.custom-textarea {
+  height: 100px;
+  width: 100%;
+}
+.collapsible {
+  background-color: #efecec;
+  color: black;
+  cursor: pointer;
+  /* padding: 18px; */
+  padding: 4px 8px;
+  width: 100%;
+  border: none;
+  text-align: left;
+  outline: none;
+  /* font-size: 15px; */
+  border: 1px solid #d0d0d0;
+  font-weight: bold;
+}
+
+.content {
+  display: none;
+  overflow: hidden;
+}
+
+.navbar {
+  overflow: hidden;
+  background-color: #efecec;
+}
+/* CSS pour le bouton désactivé */
+.disabled-button {
+  color: red;
+}
+
+.custom-tabs {
+  font-family: Arial, sans-serif;
+}
+
+.custom-tab-list {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+}
+
+.custom-tab-list li {
+  cursor: pointer;
+  padding: 10px 20px;
+  border-bottom: 2px solid transparent;
+}
+
+.custom-tab-list li.active {
+  border-bottom-color: #0070d2;
+}
+
+.custom-tab-content > div {
+  display: none;
+}
+
+.custom-tab-content > div.active {
+  display: block;
+}
+input[type="date"],
+input[type="time"] {
+  width: calc(100% - 20px);
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 16px;
+}
+input[type="date"]:focus,
+input[type="time"]:focus {
+  border-color: #007bff;
+  outline: none;
+  box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+}
